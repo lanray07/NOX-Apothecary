@@ -1,0 +1,23 @@
+# Xcode
+DerivedData/
+build/
+*.xcuserstate
+xcuserdata/
+*.moved-aside
+*.xccheckout
+*.xcscmblueprint
+
+# Swift
+.build/
+
+# App Store / signing secrets
+*.p8
+*.p12
+*.mobileprovision
+*.ipa
+*.xcarchive
+ExportOptions.generated.plist
+
+# System
+.DS_Store
+Thumbs.db
