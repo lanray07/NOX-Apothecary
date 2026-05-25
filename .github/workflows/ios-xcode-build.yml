@@ -18,7 +18,7 @@ on:
 jobs:
   simulator-build:
     name: Build for iOS Simulator
-    runs-on: macos-15
+    runs-on: macos-26
 
     steps:
       - name: Checkout
@@ -30,7 +30,16 @@ jobs:
           tar -xzf "$RUNNER_TEMP/nox-project.tar.gz"
 
       - name: Select Xcode
-        run: sudo xcode-select -s /Applications/Xcode_16.4.app
+        run: |
+          XCODE_PATH="$(find /Applications -maxdepth 1 -name 'Xcode_26*.app' -print | sort | tail -n 1)"
+          if [ -z "$XCODE_PATH" ]; then
+            echo "::error::Xcode 26 is required for App Store uploads."
+            find /Applications -maxdepth 1 -name 'Xcode*.app' -print
+            exit 1
+          fi
+          sudo xcode-select -s "$XCODE_PATH"
+          xcodebuild -version
+          xcodebuild -showsdks | grep -E 'iphoneos26'
 
       - name: Show Xcode version
         run: xcodebuild -version
@@ -45,12 +54,12 @@ jobs:
             -project "NOX Apothecary.xcodeproj" \
             -scheme "NOX Apothecary" \
             -configuration Debug \
-            -destination "platform=iOS Simulator,name=iPhone 16 Pro" \
+            -destination "generic/platform=iOS Simulator" \
             CODE_SIGNING_ALLOWED=NO
 
   app-store-archive:
     name: Archive and Upload to App Store Connect
-    runs-on: macos-15
+    runs-on: macos-26
     if: github.event_name == 'workflow_dispatch' && inputs.upload_to_app_store == 'true'
 
     steps:
@@ -63,7 +72,16 @@ jobs:
           tar -xzf "$RUNNER_TEMP/nox-project.tar.gz"
 
       - name: Select Xcode
-        run: sudo xcode-select -s /Applications/Xcode_16.4.app
+        run: |
+          XCODE_PATH="$(find /Applications -maxdepth 1 -name 'Xcode_26*.app' -print | sort | tail -n 1)"
+          if [ -z "$XCODE_PATH" ]; then
+            echo "::error::Xcode 26 is required for App Store uploads."
+            find /Applications -maxdepth 1 -name 'Xcode*.app' -print
+            exit 1
+          fi
+          sudo xcode-select -s "$XCODE_PATH"
+          xcodebuild -version
+          xcodebuild -showsdks | grep -E 'iphoneos26'
 
       - name: Generate App Icon
         run: python3 ci/generate_app_icon.py
