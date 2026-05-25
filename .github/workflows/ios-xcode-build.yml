@@ -135,7 +135,7 @@ jobs:
             PRODUCT_BUNDLE_IDENTIFIER="com.noxapothecary.app" \
             CODE_SIGN_STYLE="Manual" \
             CODE_SIGN_IDENTITY="Apple Distribution" \
-            PROVISIONING_PROFILE_SPECIFIER="NOX Apothecary App Store"
+            PROVISIONING_PROFILE_SPECIFIER="NOX Apothecary App Store CI"
 
       - name: Export IPA
         env:
